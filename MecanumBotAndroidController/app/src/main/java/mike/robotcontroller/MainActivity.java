@@ -327,7 +327,7 @@ public class MainActivity extends Activity {
                         @Override
                         public void run() {
                             try {
-                                final String msgFinal = FL + ":" + FR + ":" + BL + ":" + BR;
+                                final String msgFinal = FL + ":" + FR + ":" + BL + ":" + BR + '\n';
                                 Log.e("Values", msgFinal);
                                 outputStream.write(msgFinal.getBytes());
                             } catch (IOException e) {
