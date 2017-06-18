@@ -33,42 +33,55 @@ void setup() {
 void loop() {
   // Read device output if available.
   if (mySerial.available()) {
-    while(mySerial.available()) { // While there is more to be read, keep reading.
+    while(mySerial.available()) {
         command += mySerial.readStringUntil('\n');
         if (command != lastCommand) {
-          
-        
-        int idx = command.indexOf(':');
-        String first = command.substring(0, idx);
-          if (first.startsWith("-")) {
-          first = first.substring(1);
-          left = first.toInt();
-          left *= -1;
-        }
-        else {
-          left = first.toInt();
-        }
-        String second = command.substring(idx+1);
-        if (second.startsWith("-")) {
-          second = second.substring(1);
-          right = second.toInt();
-          right *= -1;
-        }
-        else {
-          right = second.toInt();
-        }
-        Bleft = left;
-        Bright = right;
-        left = map(left, -50, 50, 60, 120);
-        right = map(right, -50, 50, 60, 120);
-        Bleft = map(Bleft, 50, -50, 60, 120);
-        Bright = map(Bright, 50, -50, 60, 120);
-        drive(left, right, Bleft, Bright);
+          int idx1 = command.indexOf(':', 0);
+          int idx2 = command.indexOf(':', idx1);
+          int idx3 = command.indexOf(':', idx2);
+          String first = command.substring(0, idx1);
+            if (first.startsWith("-")) {
+            first = first.substring(1);
+            left = first.toInt();
+            left *= -1;
+          }
+          else {
+            left = first.toInt();
+          }
+          String second = command.substring(idx1+1,idx2);
+          if (second.startsWith("-")) {
+            second = second.substring(1);
+            right = second.toInt();
+            right *= -1;
+          }
+          else {
+            right = second.toInt();
+          }
+  
+          String third = command.substring(idx2+1,idx3);
+          if (second.startsWith("-")) {
+            third = third.substring(1);
+            Bleft = third.toInt();
+            Bleft *= -1;
+          }
+          else {
+            Bleft = third.toInt();
+          }
+  
+          String fourth = command.substring(idx3+1);
+          if (fourth.startsWith("-")) {
+            fourth = fourth.substring(1);
+            Bright = fourth.toInt();
+            Bright *= -1;
+          }
+          else {
+            Bright = fourth.toInt();
+          }
+          drive(left, right, Bleft, Bright);
         }
         lastCommand = command;
         command = "";
     }
-    
   }
   
   // Read user input if available.

@@ -9,15 +9,16 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Handler;
+//import android.os.Handler;
 
 import java.io.IOException;
-import java.io.InputStream;
+//import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
@@ -29,19 +30,16 @@ public class MainActivity extends Activity {
     private BluetoothDevice device;
     private BluetoothSocket socket;
     public static OutputStream outputStream;
-    private InputStream inputStream;
-    Button stopBtn, leftBtn, rightBtn, connectBtn;
+    //private InputStream inputStream;
+    Button stopBtn, connectBtn;
     TextView FLTextView, FRTextView, BLTextView, BRTextView, connectTextView;
     SeekBar leftSeekBar, rightSeekBar, middleSeekBar;
     public static int FL, FR, BL, BR = 0;
     boolean deviceConnected=false;
-    byte buffer[];
-    boolean stopThread;
+    //byte buffer[];
+    //boolean stopThread;
 
     static final Integer BLUETOOTH = 0x01;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +51,12 @@ public class MainActivity extends Activity {
         stopBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                leftSeekBar.setProgress(50);
-                rightSeekBar.setProgress(50);
-                middleSeekBar.setProgress(50);
+                leftSeekBar.setProgress(90);
+                rightSeekBar.setProgress(90);
+                middleSeekBar.setProgress(90);
             }
         });
 
-        leftBtn = (Button) findViewById(R.id.leftBtn);
-        rightBtn = (Button) findViewById(R.id.rightBtn);
         connectBtn = (Button) findViewById(R.id.connectBtn);
 
         connectBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,17 +71,17 @@ public class MainActivity extends Activity {
                     {
                         setUiEnabled(true);
                         deviceConnected=true;
-                        beginListenForData();
+                        //beginListenForData();
                         connectTextView.setText("\nConnection Opened!\n");
                         startSendingValues();
 
                     }
                     else {
-                        connectTextView.setText("BTConnect Failed");
+                        connectTextView.setText(R.string.BTConnectFailed);
                     }
 
                 }
-                setUiEnabled(true);
+                setUiEnabled(false);
             }
         });
 
@@ -96,13 +92,13 @@ public class MainActivity extends Activity {
         connectTextView = (TextView) findViewById(R.id.connectTextView);
 
         leftSeekBar = (SeekBar) findViewById(R.id.leftSeekBar);
-        leftSeekBar.setProgress(50);
+        leftSeekBar.setProgress(90);
         leftSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                FLTextView.setText(String.valueOf(progress - 50));
-                BLTextView.setText(String.valueOf(progress - 50));
-                FL = BL = progress - 50;
+                FLTextView.setText(String.valueOf(progress - 90));
+                BLTextView.setText(String.valueOf(progress - 90));
+                FL = BL = progress;
 
             }
 
@@ -122,9 +118,9 @@ public class MainActivity extends Activity {
         rightSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                FRTextView.setText(String.valueOf(progress - 50));
-                BRTextView.setText(String.valueOf(progress - 50));
-                FR = BR = progress - 50;
+                FRTextView.setText(String.valueOf(progress - 90));
+                BRTextView.setText(String.valueOf(progress - 90));
+                FR = BR = progress;
                 //sendMessage(leftSeekBar.getProgress() - 50, progress - 50);
             }
 
@@ -138,32 +134,32 @@ public class MainActivity extends Activity {
             }
         });
         middleSeekBar = (SeekBar) findViewById(R.id.middleseekBar);
-        middleSeekBar.setProgress(50);
+        middleSeekBar.setProgress(90);
         middleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (progress < 50) {
-                    FLTextView.setText(String.valueOf(50 - progress));
-                    BLTextView.setText(String.valueOf(progress - 50));
-                    FRTextView.setText(String.valueOf(progress - 50));
-                    BRTextView.setText(String.valueOf(50 - progress));
-                    FL = BR = 150 - (50 - progress);
-                    BL = FR = 150 + (50 - progress);
+                if (progress < 90) {
+                    FLTextView.setText(String.valueOf(progress - 90));
+                    BLTextView.setText(String.valueOf(-progress + 90));
+                    FRTextView.setText(String.valueOf(progress - 90));
+                    BRTextView.setText(String.valueOf(-progress + 90));
+                    FL = BL = -progress;
+                    FR = BR = progress;
                 }
-                else if (progress > 50) {
-                    FLTextView.setText(String.valueOf(progress - 50));
-                    BLTextView.setText(String.valueOf(50 - progress));
-                    FRTextView.setText(String.valueOf(50 - progress));
-                    BRTextView.setText(String.valueOf(progress - 50));
-                    FL = BR = 150 + (50 - progress);
-                    BL = FR = 150 - (50 - progress);
+                else if (progress > 90) {
+                    FLTextView.setText(String.valueOf(progress - 90));
+                    BLTextView.setText(String.valueOf(-progress + 90));
+                    FRTextView.setText(String.valueOf(-progress + 90));
+                    BRTextView.setText(String.valueOf(progress - 90));
+                    FL = BL = -progress;
+                    FR = BR = -progress;
                 }
                 else {
                     FLTextView.setText(String.valueOf(0));
                     BLTextView.setText(String.valueOf(0));
                     FRTextView.setText(String.valueOf(0));
                     BRTextView.setText(String.valueOf(0));
-                    FL = FR = BL = BR = 150;
+                    FL = FR = BL = BR = 90;
 
                 }
                 //sendMessage(leftSeekBar.getProgress() - 50, progress - 50);
@@ -178,7 +174,7 @@ public class MainActivity extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-        setUiEnabled(false);
+        setUiEnabled(true);
 
     }
 
@@ -186,8 +182,6 @@ public class MainActivity extends Activity {
     {
         connectBtn.setEnabled(!bool);
         stopBtn.setEnabled(bool);
-        leftBtn.setEnabled(bool);
-        rightBtn.setEnabled(bool);
         leftSeekBar.setEnabled(bool);
         FLTextView.setEnabled(bool);
         BLTextView.setEnabled(bool);
@@ -231,7 +225,7 @@ public class MainActivity extends Activity {
                     break;
                 }
             }
-            if (!found) connectTextView.setText("Pair the Device First");
+            if (!found) connectTextView.setText(R.string.PairDeviceFirst);
         }
         return found;
     }
@@ -253,18 +247,18 @@ public class MainActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            try {
-                inputStream=socket.getInputStream();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //try {
+                //inputStream=socket.getInputStream();
+            //} catch (IOException e) {
+            //    e.printStackTrace();
+            //}
 
         }
 
 
         return connected;
     }
-
+/*
     void beginListenForData()
     {
         final Handler handler = new Handler();
@@ -303,7 +297,7 @@ public class MainActivity extends Activity {
 
         thread.start();
     }
-
+*/
     private void askForPermission(String permission, Integer requestCode) {
         if (ContextCompat.checkSelfPermission(MainActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
 
@@ -332,22 +326,9 @@ public class MainActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            int FLt, BLt, FRt, BRt;
-                            if (FL < 100) {
-                                FLt = mapValue(FL, -50, 50, 40, 140);
-                                BLt = mapValue(BL, 50, -50, 40, 140);
-                                FRt = mapValue(FR, -50, 50, 40, 140);
-                                BRt = mapValue(BR, 50, -50, 40, 140);
-                            }
-                            else {
-                                FLt = mapValue(FL, 100, 200, 40, 140);
-                                BLt = mapValue(BL, 200, 100, 40, 140);
-                                FRt = mapValue(FR, 100, 200, 40, 140);
-                                BRt = mapValue(BR, 200, 100, 40, 140);
-
-                            }
-                            final String msgFinal = String.valueOf(FLt) + ":" + String.valueOf(BLt) + ":" + String.valueOf(FRt) + ":" + String.valueOf(BRt) + '\n';
                             try {
+                                final String msgFinal = FL + ":" + FR + ":" + BL + ":" + BR;
+                                Log.e("Values", msgFinal);
                                 outputStream.write(msgFinal.getBytes());
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -355,7 +336,7 @@ public class MainActivity extends Activity {
                         }
                     });
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(400);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -368,8 +349,8 @@ public class MainActivity extends Activity {
 
     //new_value = (old_value - old_bottom) / (old_top - old_bottom) * (new_top - new_bottom) + new_bottom
 
-    private int mapValue(int X, int oBot, int oTop, int nBot, int nTop) {
-        return (X - oBot) / (oTop - oBot) * (nTop - nBot) + nBot;
-    }
+    //private int mapValue(int X, int oBot, int oTop, int nBot, int nTop) {
+    //    return (X - oBot) / (oTop - oBot) * (nTop - nBot) + nBot;
+    //}
 
 }

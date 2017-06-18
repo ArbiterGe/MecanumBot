@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">RobotController</string>
+    <string name="MikesBotControl">RobotController</string>
+    <string name="BTConnectFailed">BT Connect Failed</string>
+    <string name="PairDeviceFirst">Pair the Device First</string>
 </resources>
