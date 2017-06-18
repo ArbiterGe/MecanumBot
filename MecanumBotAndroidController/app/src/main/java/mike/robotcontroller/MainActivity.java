@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
     Button stopBtn, connectBtn;
     TextView FLTextView, FRTextView, BLTextView, BRTextView, connectTextView;
     SeekBar leftSeekBar, rightSeekBar, middleSeekBar;
-    public static int FL, FR, BL, BR = 0;
+    public static int FL, FR, BL, BR = 90;
     boolean deviceConnected=false;
     //byte buffer[];
     //boolean stopThread;
@@ -81,7 +81,6 @@ public class MainActivity extends Activity {
                     }
 
                 }
-                setUiEnabled(false);
             }
         });
 
@@ -98,7 +97,10 @@ public class MainActivity extends Activity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 FLTextView.setText(String.valueOf(progress - 90));
                 BLTextView.setText(String.valueOf(progress - 90));
-                FL = BL = progress;
+                if (progress < 70) progress = 70;
+                else if (progress > 110) progress = 110;
+                FL = progress;
+                BL = progress - (2*(progress - 90));
 
             }
 
@@ -114,13 +116,16 @@ public class MainActivity extends Activity {
         });
 
         rightSeekBar = (SeekBar) findViewById(R.id.rightSeekBar);
-        rightSeekBar.setProgress(50);
+        rightSeekBar.setProgress(90);
         rightSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 FRTextView.setText(String.valueOf(progress - 90));
                 BRTextView.setText(String.valueOf(progress - 90));
-                FR = BR = progress;
+                if (progress < 70) progress = 70;
+                else if (progress > 110) progress = 110;
+                FR = progress;
+                BR = progress - (2*(progress - 90));
                 //sendMessage(leftSeekBar.getProgress() - 50, progress - 50);
             }
 
@@ -143,25 +148,23 @@ public class MainActivity extends Activity {
                     BLTextView.setText(String.valueOf(-progress + 90));
                     FRTextView.setText(String.valueOf(progress - 90));
                     BRTextView.setText(String.valueOf(-progress + 90));
-                    FL = BL = -progress;
-                    FR = BR = progress;
                 }
                 else if (progress > 90) {
                     FLTextView.setText(String.valueOf(progress - 90));
                     BLTextView.setText(String.valueOf(-progress + 90));
                     FRTextView.setText(String.valueOf(-progress + 90));
                     BRTextView.setText(String.valueOf(progress - 90));
-                    FL = BL = -progress;
-                    FR = BR = -progress;
                 }
                 else {
                     FLTextView.setText(String.valueOf(0));
                     BLTextView.setText(String.valueOf(0));
                     FRTextView.setText(String.valueOf(0));
                     BRTextView.setText(String.valueOf(0));
-                    FL = FR = BL = BR = 90;
-
                 }
+                if (progress < 70) progress = 70;
+                else if (progress > 110) progress = 110;
+                FL = BL = progress;
+                FR = BR = progress - (2*(progress - 90));
                 //sendMessage(leftSeekBar.getProgress() - 50, progress - 50);
             }
 
@@ -174,7 +177,7 @@ public class MainActivity extends Activity {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-        setUiEnabled(true);
+        setUiEnabled(false);
 
     }
 

@@ -37,46 +37,35 @@ void loop() {
         command += mySerial.readStringUntil('\n');
         if (command != lastCommand) {
           int idx1 = command.indexOf(':', 0);
-          int idx2 = command.indexOf(':', idx1);
-          int idx3 = command.indexOf(':', idx2);
-          String first = command.substring(0, idx1);
-            if (first.startsWith("-")) {
-            first = first.substring(1);
-            left = first.toInt();
-            left *= -1;
-          }
-          else {
-            left = first.toInt();
-          }
+          int idx2 = command.indexOf(':', idx1+1);
+          int idx3 = command.indexOf(':', idx2+1);
+          String first = command.substring(0,idx1);
+          
+          left = first.toInt();
           String second = command.substring(idx1+1,idx2);
-          if (second.startsWith("-")) {
-            second = second.substring(1);
-            right = second.toInt();
-            right *= -1;
-          }
-          else {
-            right = second.toInt();
-          }
-  
+          right = second.toInt();
           String third = command.substring(idx2+1,idx3);
-          if (second.startsWith("-")) {
-            third = third.substring(1);
-            Bleft = third.toInt();
-            Bleft *= -1;
-          }
-          else {
-            Bleft = third.toInt();
-          }
-  
+          Bleft = third.toInt();
           String fourth = command.substring(idx3+1);
-          if (fourth.startsWith("-")) {
-            fourth = fourth.substring(1);
-            Bright = fourth.toInt();
-            Bright *= -1;
-          }
-          else {
-            Bright = fourth.toInt();
-          }
+                    
+          Serial.print(first);
+          Serial.print(":");
+          Serial.print(second);
+          Serial.print(":");
+          Serial.print(third);
+          Serial.print(":");
+          Serial.println(fourth);
+          
+          Bright = fourth.toInt();
+          /*
+          Serial.print(left);
+          Serial.print(":");
+          Serial.print(right);
+          Serial.print(":");
+          Serial.print(Bleft);
+          Serial.print(":");
+          Serial.println(Bright);
+          */
           drive(left, right, Bleft, Bright);
         }
         lastCommand = command;
