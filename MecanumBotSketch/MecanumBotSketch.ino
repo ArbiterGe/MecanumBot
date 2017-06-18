@@ -8,10 +8,10 @@ Servo FR;
 Servo FL;
 Servo BR;
 Servo BL;
-int left = 0;
-int right = 0;
-int Bleft = 0;
-int Bright = 0;
+int left = 90;
+int right = 90;
+int Bleft = 90;
+int Bright = 90;
 
 void setup() {
   // Open serial communications:
@@ -39,15 +39,16 @@ void loop() {
           int idx1 = command.indexOf(':', 0);
           int idx2 = command.indexOf(':', idx1+1);
           int idx3 = command.indexOf(':', idx2+1);
-          String first = command.substring(0,idx1);
+          String sub = command.substring(0,idx1);
           
-          left = first.toInt();
-          String second = command.substring(idx1+1,idx2);
-          right = second.toInt();
-          String third = command.substring(idx2+1,idx3);
-          Bleft = third.toInt();
-          String fourth = command.substring(idx3+1);
-                    
+          left = sub.toInt();
+          sub = command.substring(idx1+1,idx2);
+          right = sub.toInt();
+          sub = command.substring(idx2+1,idx3);
+          Bleft = sub.toInt();
+          sub = command.substring(idx3+1);
+          Bright = sub.toInt();
+                    /*
           Serial.print(first);
           Serial.print(":");
           Serial.print(second);
@@ -55,8 +56,8 @@ void loop() {
           Serial.print(third);
           Serial.print(":");
           Serial.println(fourth);
-          
-          Bright = fourth.toInt();
+          */
+         
           /*
           Serial.print(left);
           Serial.print(":");

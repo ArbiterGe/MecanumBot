@@ -200,35 +200,35 @@ public class MainActivity extends Activity {
         BluetoothAdapter bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             Toast.makeText(getApplicationContext(),"Device doesnt Support Bluetooth",Toast.LENGTH_SHORT).show();
+            found = false;
         }
-        if(!bluetoothAdapter.isEnabled())
-        {
-            Intent enableAdapter = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableAdapter, 0);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
-        if(bondedDevices.isEmpty())
-        {
-            Toast.makeText(getApplicationContext(),"Please Pair the Device first",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            for (BluetoothDevice iterator : bondedDevices)
-            {
-                //Log.e("Device", iterator.getName() + "   " + iterator.getAddress());
-                if(iterator.getAddress().equals(DEVICE_ADDRESS))
-                {
-                    device=iterator;
-                    found=true;
-                    break;
+        else {
+            if (!bluetoothAdapter.isEnabled()) {
+                Intent enableAdapter = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableAdapter, 0);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-            if (!found) connectTextView.setText(R.string.PairDeviceFirst);
+
+            Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
+            if(bondedDevices.isEmpty())
+            {
+                Toast.makeText(getApplicationContext(),"Please Pair the Device first",Toast.LENGTH_SHORT).show();
+            }
+            else {
+                for (BluetoothDevice iterator : bondedDevices) {
+                    //Log.e("Device", iterator.getName() + "   " + iterator.getAddress());
+                    if (iterator.getAddress().equals(DEVICE_ADDRESS)) {
+                        device = iterator;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) connectTextView.setText(R.string.PairDeviceFirst);
+            }
         }
         return found;
     }
@@ -325,7 +325,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void run() {
-                while(true) {
+                while(deviceConnected) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

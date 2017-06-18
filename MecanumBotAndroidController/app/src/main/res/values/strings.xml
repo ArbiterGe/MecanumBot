@@ -2,4 +2,8 @@
     <string name="app_name">RobotController</string>
     <string name="BTConnectFailed">BT Connect Failed</string>
     <string name="PairDeviceFirst">Pair the Device First</string>
+    <string name="DefaultTextView">0</string>
+    <string name="DefaultBTText">Not Connected</string>
+    <string name="ConnectButtonText">Connect</string>
+    <string name="StopButtonText">Stop</string>
 </resources>
